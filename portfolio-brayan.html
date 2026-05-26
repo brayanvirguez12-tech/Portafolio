@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brayan Virguez — Software Engineer</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #060610;
+    --surface: #0d0d1a;
+    --border: #1a1a2e;
+    --accent: #6d28d9;
+    --accent2: #0ea5e9;
+    --accent3: #f59e0b;
+    --text: #eaeaf4;
+    --muted: #60607a;
+    --card: #0f0f1e;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Mono', monospace;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(109,40,217,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(109,40,217,0.04) 1px, transparent 1px);
+    background-size: 52px 52px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.1rem 3rem;
+    border-bottom: 1px solid var(--border);
+    background: rgba(6,6,16,0.88);
+    backdrop-filter: blur(14px);
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 1.1rem; letter-spacing: -0.02em;
+  }
+  .nav-logo span { color: var(--accent2); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    color: var(--muted); text-decoration: none;
+    font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 7rem 3rem 4rem;
+    position: relative; z-index: 1; overflow: hidden;
+  }
+
+  .hero-orb {
+    position: absolute; right: -8%; top: 45%; transform: translateY(-50%);
+    width: 700px; height: 700px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(109,40,217,0.12) 0%, transparent 68%);
+    filter: blur(50px); pointer-events: none;
+    animation: breathe 5s ease-in-out infinite;
+  }
+  .hero-orb2 {
+    position: absolute; left: 10%; bottom: -15%;
+    width: 350px; height: 350px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(14,165,233,0.07) 0%, transparent 68%);
+    filter: blur(60px); pointer-events: none;
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    font-size: 0.68rem; letter-spacing: 0.18em; color: var(--accent2);
+    text-transform: uppercase; margin-bottom: 1.8rem;
+    opacity: 0; animation: fadeUp 0.7s 0.2s forwards;
+  }
+  .hero-badge::before { content: ''; display: block; width: 28px; height: 1px; background: var(--accent2); }
+  .hero-badge .dot {
+    width: 7px; height: 7px; border-radius: 50%; background: #22c55e;
+    box-shadow: 0 0 8px #22c55e;
+    animation: blink 2s infinite;
+  }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(3.2rem, 8.5vw, 7.5rem);
+    line-height: 0.93; letter-spacing: -0.04em;
+    margin-bottom: 0.3rem;
+    opacity: 0; animation: fadeUp 0.7s 0.4s forwards;
+  }
+  .hero h1 .last { color: var(--accent); }
+
+  .hero-title-sub {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(0.9rem, 2vw, 1.25rem);
+    font-weight: 600; letter-spacing: 0.05em;
+    color: var(--muted); margin-bottom: 2.5rem;
+    opacity: 0; animation: fadeUp 0.7s 0.55s forwards;
+  }
+
+  .hero-desc {
+    max-width: 520px; color: var(--muted);
+    font-size: 0.82rem; line-height: 1.9; margin-bottom: 3rem;
+    opacity: 0; animation: fadeUp 0.7s 0.7s forwards;
+  }
+  .hero-desc strong { color: var(--text); font-weight: 500; }
+
+  .hero-ctas {
+    display: flex; gap: 1rem; flex-wrap: wrap;
+    opacity: 0; animation: fadeUp 0.7s 0.85s forwards;
+  }
+
+  .btn-primary {
+    padding: 0.8rem 1.9rem;
+    background: var(--accent); color: #fff; border: none;
+    font-family: 'DM Mono', monospace; font-size: 0.78rem; letter-spacing: 0.05em;
+    cursor: pointer; text-decoration: none; display: inline-block;
+    transition: all 0.2s;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  }
+  .btn-primary:hover { background: #5b21b6; transform: translateY(-2px); }
+
+  .btn-outline {
+    padding: 0.8rem 1.9rem; background: transparent;
+    color: var(--text); border: 1px solid var(--border);
+    font-family: 'DM Mono', monospace; font-size: 0.78rem; letter-spacing: 0.05em;
+    cursor: pointer; text-decoration: none; display: inline-block;
+    transition: all 0.2s;
+  }
+  .btn-outline:hover { border-color: var(--accent2); color: var(--accent2); }
+
+  /* SECTIONS */
+  section { padding: 5.5rem 3rem; position: relative; z-index: 1; }
+
+  .section-header {
+    display: flex; align-items: center; gap: 1rem; margin-bottom: 3rem;
+  }
+  .section-num { font-size: 0.63rem; color: var(--accent2); letter-spacing: 0.12em; }
+  .section-title {
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: clamp(1.7rem, 3.5vw, 2.3rem); letter-spacing: -0.03em;
+  }
+  .section-line { flex: 1; height: 1px; background: var(--border); max-width: 180px; }
+
+  /* ABOUT */
+  .about-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 5rem; align-items: start; }
+
+  .about-text p {
+    color: var(--muted); line-height: 1.95; font-size: 0.82rem; margin-bottom: 1.1rem;
+  }
+  .about-text p strong { color: var(--text); font-weight: 500; }
+
+  .about-contact {
+    margin-top: 2rem; display: flex; flex-direction: column; gap: 0.6rem;
+  }
+  .contact-item {
+    display: flex; align-items: center; gap: 0.7rem;
+    font-size: 0.75rem; color: var(--muted); text-decoration: none;
+    transition: color 0.2s;
+  }
+  .contact-item:hover { color: var(--accent2); }
+  .contact-item .ci { color: var(--accent2); font-size: 0.9rem; }
+
+  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+  .stat-card {
+    border: 1px solid var(--border); padding: 1.4rem;
+    background: var(--card); position: relative; overflow: hidden;
+    transition: border-color 0.3s;
+  }
+  .stat-card::before {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 100%; height: 2px; background: var(--accent2);
+    transform: scaleX(0); transform-origin: left; transition: transform 0.4s;
+  }
+  .stat-card:hover::before { transform: scaleX(1); }
+  .stat-card:hover { border-color: var(--accent2); }
+  .stat-num {
+    font-family: 'Syne', sans-serif; font-size: 2.2rem;
+    font-weight: 800; color: var(--accent2); line-height: 1;
+  }
+  .stat-label { font-size: 0.65rem; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 0.35rem; }
+
+  /* SKILLS */
+  .skills-section { background: var(--surface); }
+
+  .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 1.2rem; }
+
+  .skill-category {
+    border: 1px solid var(--border); padding: 1.6rem;
+    background: var(--card); transition: all 0.3s;
+  }
+  .skill-category:hover { border-color: var(--accent); transform: translateY(-4px); }
+
+  .skill-cat-header {
+    display: flex; align-items: center; gap: 0.7rem; margin-bottom: 1.3rem;
+  }
+  .skill-icon {
+    width: 34px; height: 34px; background: var(--border);
+    display: flex; align-items: center; justify-content: center; font-size: 1rem;
+  }
+  .skill-cat-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem; }
+
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+  .skill-tag {
+    font-size: 0.65rem; padding: 0.28rem 0.65rem;
+    border: 1px solid var(--border); color: var(--muted);
+    letter-spacing: 0.04em; transition: all 0.2s;
+  }
+  .skill-tag:hover { border-color: var(--accent); color: var(--accent); }
+  .skill-tag.hot {
+    border-color: rgba(109,40,217,0.45); color: #a78bfa;
+    background: rgba(109,40,217,0.07);
+  }
+  .skill-tag.cyan {
+    border-color: rgba(14,165,233,0.4); color: #7dd3fc;
+    background: rgba(14,165,233,0.07);
+  }
+
+  .skill-bar-list { margin-top: 1.3rem; }
+  .skill-bar-item { margin-bottom: 1.1rem; }
+  .skill-bar-label {
+    display: flex; justify-content: space-between;
+    font-size: 0.68rem; margin-bottom: 0.35rem; color: var(--muted);
+  }
+  .skill-bar-label span:last-child { color: var(--accent2); }
+  .skill-bar-track { height: 2px; background: var(--border); overflow: hidden; }
+  .skill-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    width: 0%; transition: width 1.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* EXPERIENCE */
+  .experience-section { background: var(--surface); }
+
+  .timeline { position: relative; padding-left: 2.5rem; }
+  .timeline::before {
+    content: ''; position: absolute; left: 0; top: 0.5rem; bottom: 0;
+    width: 1px; background: var(--border);
+  }
+  .timeline-item {
+    position: relative; margin-bottom: 3rem;
+    opacity: 0; transform: translateX(-16px); transition: all 0.6s;
+  }
+  .timeline-item.visible { opacity: 1; transform: translateX(0); }
+
+  .timeline-dot {
+    position: absolute; left: -2.85rem; top: 0.35rem;
+    width: 10px; height: 10px; background: var(--accent);
+    border: 2px solid var(--bg); border-radius: 50%;
+    box-shadow: 0 0 0 2px var(--accent);
+  }
+  .timeline-dot.current { background: #22c55e; box-shadow: 0 0 0 2px #22c55e, 0 0 12px #22c55e; }
+
+  .timeline-date { font-size: 0.63rem; color: var(--accent2); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.45rem; }
+  .timeline-role { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.05rem; margin-bottom: 0.2rem; }
+  .timeline-company { font-size: 0.72rem; color: var(--muted); margin-bottom: 1rem; }
+
+  .timeline-list { list-style: none; display: flex; flex-direction: column; gap: 0.45rem; }
+  .timeline-list li {
+    font-size: 0.76rem; color: var(--muted);
+    padding-left: 1.2rem; position: relative; line-height: 1.75;
+  }
+  .timeline-list li::before { content: '→'; position: absolute; left: 0; color: var(--accent); }
+
+  /* PROJECTS */
+  .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.2rem; }
+
+  .project-card {
+    border: 1px solid var(--border); background: var(--card);
+    overflow: hidden; transition: all 0.3s; cursor: pointer;
+  }
+  .project-card:hover { border-color: var(--accent); transform: translateY(-5px); }
+
+  .project-top {
+    padding: 1.6rem 1.8rem 0.9rem; border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: flex-start;
+  }
+  .project-num { font-size: 0.58rem; color: var(--accent); letter-spacing: 0.15em; }
+  .project-arrow {
+    width: 30px; height: 30px; border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.95rem; color: var(--muted); transition: all 0.2s;
+  }
+  .project-card:hover .project-arrow { border-color: var(--accent); color: var(--accent); transform: rotate(45deg); }
+
+  .project-body { padding: 1.3rem 1.8rem 1.7rem; }
+  .project-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.15rem; letter-spacing: -0.02em; margin-bottom: 0.65rem; }
+  .project-desc { font-size: 0.75rem; color: var(--muted); line-height: 1.85; margin-bottom: 1.3rem; }
+
+  .project-stack { display: flex; flex-wrap: wrap; gap: 0.38rem; }
+  .stack-tag { font-size: 0.6rem; padding: 0.18rem 0.55rem; letter-spacing: 0.06em; text-transform: uppercase; }
+  .stack-tag.kotlin { background: rgba(109,40,217,0.1); color: #a78bfa; border: 1px solid rgba(109,40,217,0.22); }
+  .stack-tag.power  { background: rgba(14,165,233,0.08); color: #7dd3fc; border: 1px solid rgba(14,165,233,0.18); }
+  .stack-tag.bi     { background: rgba(245,158,11,0.1); color: #fcd34d; border: 1px solid rgba(245,158,11,0.2); }
+  .stack-tag.python { background: rgba(34,197,94,0.08); color: #86efac; border: 1px solid rgba(34,197,94,0.18); }
+  .stack-tag.db     { background: rgba(239,68,68,0.08); color: #fca5a5; border: 1px solid rgba(239,68,68,0.18); }
+  .stack-tag.android{ background: rgba(16,185,129,0.08); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.18); }
+
+  /* EDUCATION */
+  .edu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.2rem; }
+  .edu-card {
+    border: 1px solid var(--border); padding: 1.6rem;
+    background: var(--card); transition: all 0.3s;
+  }
+  .edu-card:hover { border-color: var(--accent2); transform: translateY(-3px); }
+  .edu-year { font-size: 0.6rem; color: var(--accent2); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.6rem; }
+  .edu-degree { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; margin-bottom: 0.35rem; }
+  .edu-inst { font-size: 0.72rem; color: var(--muted); }
+
+  /* CERTS */
+  .certs-section { background: var(--surface); }
+  .certs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
+  .cert-card {
+    border: 1px solid var(--border); padding: 1.4rem;
+    background: var(--card); display: flex; gap: 1rem; align-items: flex-start;
+    transition: all 0.3s;
+  }
+  .cert-card:hover { border-color: var(--accent3); }
+  .cert-badge {
+    width: 38px; height: 38px; min-width: 38px;
+    background: rgba(245,158,11,0.08);
+    border: 1px solid rgba(245,158,11,0.22);
+    display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+  }
+  .cert-name { font-family: 'Syne', sans-serif; font-weight: 600; font-size: 0.82rem; margin-bottom: 0.2rem; }
+  .cert-issuer { font-size: 0.66rem; color: var(--accent3); letter-spacing: 0.05em; }
+
+  /* CONTACT SECTION */
+  .contact-section { border-top: 1px solid var(--border); }
+  .contact-inner { max-width: 580px; margin: 0 auto; text-align: center; }
+  .contact-inner .section-title { font-size: clamp(1.9rem, 4.5vw, 3rem); margin-bottom: 1rem; }
+  .contact-sub { color: var(--muted); font-size: 0.79rem; line-height: 1.9; margin-bottom: 2.8rem; }
+  .contact-links { display: flex; gap: 0.9rem; justify-content: center; flex-wrap: wrap; }
+  .c-link {
+    display: flex; align-items: center; gap: 0.55rem;
+    padding: 0.7rem 1.4rem; border: 1px solid var(--border);
+    color: var(--text); text-decoration: none; font-size: 0.75rem;
+    transition: all 0.2s;
+  }
+  .c-link:hover { border-color: var(--accent2); color: var(--accent2); transform: translateY(-2px); }
+
+  /* FOOTER */
+  footer {
+    padding: 1.8rem 3rem; border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    color: var(--muted); font-size: 0.65rem; letter-spacing: 0.05em;
+    position: relative; z-index: 1;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp { from { opacity:0; transform:translateY(22px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes breathe { 0%,100%{opacity:1;transform:translateY(-50%) scale(1);} 50%{opacity:.75;transform:translateY(-50%) scale(1.04);} }
+  @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--accent); }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    section { padding: 4rem 1.5rem; }
+    .hero { padding: 5.5rem 1.5rem 3rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    .hero-orb, .hero-orb2 { display: none; }
+    footer { flex-direction: column; gap: 0.4rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">BV<span>.</span>dev</div>
+  <ul class="nav-links">
+    <li><a href="#about">Perfil</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experiencia</a></li>
+    <li><a href="#projects">Proyectos</a></li>
+    <li><a href="#education">Educación</a></li>
+    <li><a href="#contact">Contacto</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-orb"></div>
+  <div class="hero-orb2"></div>
+
+  <div class="hero-badge">
+    <span class="dot"></span>
+    Disponible para nuevas oportunidades
+  </div>
+
+  <h1>
+    Brayan<br>
+    <span class="last">Virguez</span>
+  </h1>
+
+  <div class="hero-title-sub">
+    Ingeniero de Software · Power Platform · Android Developer
+  </div>
+
+  <p class="hero-desc">
+    Especializado en el desarrollo de soluciones con <strong>Power Platform</strong> y aplicaciones <strong>Android con Kotlin</strong>. Con experiencia en el sector de <strong>hidrocarburos</strong>, enfocado en automatizar procesos, analizar datos y fortalecer la toma de decisiones empresariales.
+  </p>
+
+  <div class="hero-ctas">
+    <a href="#projects" class="btn-primary">Ver proyectos</a>
+    <a href="#contact" class="btn-outline">Contáctame</a>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-header">
+    <span class="section-num">01 /</span>
+    <h2 class="section-title">Perfil</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>Soy Ingeniero de Software con experiencia en entornos operativos del <strong>sector de hidrocarburos y sitios remotos</strong>, especializado en el desarrollo de soluciones con <strong>Power Platform</strong> (Power Apps, Power Automate y Power BI).</p>
+      <p>He <strong>liderado e implementado iniciativas tecnológicas</strong> que optimizan procesos, reducen tareas manuales y fortalecen la toma de decisiones basada en datos.</p>
+      <p>Adicionalmente, cuento con experiencia en <strong>desarrollo Android con Kotlin y Java</strong>, participando en la construcción e integración de soluciones tecnológicas orientadas a procesos empresariales y transaccionales.</p>
+      <p>Apasionado por crear software que impacte positivamente en la eficiencia operativa de las organizaciones.</p>
+
+      <div class="about-contact">
+        <a href="tel:+573168849932" class="contact-item">
+          <span class="ci">📱</span> +57 316 884 9932 / 324 405 7400
+        </a>
+        <a href="mailto:brayan.virguez12@gmail.com" class="contact-item">
+          <span class="ci">✉️</span> brayan.virguez12@gmail.com
+        </a>
+        <a href="https://www.linkedin.com/in/brayan-virguez-6316331b3/" class="contact-item" target="_blank">
+          <span class="ci">💼</span> linkedin.com/in/brayan-virguez
+        </a>
+        <a class="contact-item">
+          <span class="ci">📍</span> Puerto Gaitán, Colombia
+        </a>
+      </div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-num">3+</div>
+        <div class="stat-label">Años de experiencia</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">3</div>
+        <div class="stat-label">Empresas distintas</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">2</div>
+        <div class="stat-label">Certificaciones</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">3</div>
+        <div class="stat-label">Títulos académicos</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills" class="skills-section">
+  <div class="section-header">
+    <span class="section-num">02 /</span>
+    <h2 class="section-title">Habilidades</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="skills-grid">
+
+    <div class="skill-category">
+      <div class="skill-cat-header">
+        <div class="skill-icon">⚡</div>
+        <span class="skill-cat-name">Power Platform</span>
+      </div>
+      <div class="skill-tags">
+        <span class="skill-tag hot">Power Apps</span>
+        <span class="skill-tag hot">Power Automate</span>
+        <span class="skill-tag hot">Power BI</span>
+        <span class="skill-tag">Dataverse</span>
+        <span class="skill-tag">SharePoint</span>
+        <span class="skill-tag">Connectors</span>
+        <span class="skill-tag">KPIs / Dashboards</span>
+      </div>
+      <div class="skill-bar-list">
+        <div class="skill-bar-item">
+          <div class="skill-bar-label"><span>Power Apps</span><span>85%</span></div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" data-width="85"></div></div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-label"><span>Power Automate</span><span>80%</span></div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" data-width="80"></div></div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-label"><span>Power BI</span><span>75%</span></div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" data-width="75"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="skill-category">
+      <div class="skill-cat-header">
+        <div class="skill-icon">🤖</div>
+        <span class="skill-cat-name">Android & Mobile</span>
+      </div>
+      <div class="skill-tags">
+        <span class="skill-tag hot">Kotlin</span>
+        <span class="skill-tag">Java</span>
+        <span class="skill-tag">Android SDK</span>
+        <span class="skill-tag">Backend</span>
+        <span class="skill-tag">REST APIs</span>
+        <span class="skill-tag">Firebase</span>
+      </div>
+      <div class="skill-bar-list">
+        <div class="skill-bar-item">
+          <div class="skill-bar-label"><span>Kotlin</span><span>72%</span></div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" data-width="72"></div></div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-label"><span>Java Android</span><span>65%</span></div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" data-width="65"></div></div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-label"><span>Backend</span><span>60%</span></div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" data-width="60"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="skill-category">
+      <div class="skill-cat-header">
+        <div class="skill-icon">📊</div>
+        <span class="skill-cat-name">Datos & Soporte</span>
+      </div>
+      <div class="skill-tags">
+        <span class="skill-tag cyan">Python</span>
+        <span class="skill-tag cyan">PostgreSQL</span>
+        <span class="skill-tag">SQL</span>
+        <span class="skill-tag">Análisis de Datos</span>
+        <span class="skill-tag">Machine Learning</span>
+        <span class="skill-tag">Soporte TI</span>
+        <span class="skill-tag">Infraestructura</span>
+      </div>
+      <div class="skill-bar-list">
+        <div class="skill-bar-item">
+          <div class="skill-bar-label"><span>Python / Datos</span><span>70%</span></div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" data-width="70"></div></div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-label"><span>PostgreSQL / SQL</span><span>68%</span></div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" data-width="68"></div></div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-label"><span>Soporte TI</span><span>82%</span></div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" data-width="82"></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience" class="experience-section">
+  <div class="section-header">
+    <span class="section-num">03 /</span>
+    <h2 class="section-title">Experiencia</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="timeline">
+
+    <div class="timeline-item">
+      <div class="timeline-dot current"></div>
+      <div class="timeline-date">Feb 2025 — Feb 2026</div>
+      <div class="timeline-role">Desarrollador Android</div>
+      <div class="timeline-company">Glouphi · Colombia</div>
+      <ul class="timeline-list">
+        <li>Desarrollo de aplicaciones Android nativas usando Kotlin y Java.</li>
+        <li>Construcción e integración de soluciones tecnológicas orientadas a procesos empresariales y transaccionales.</li>
+        <li>Participación activa en el ciclo completo de desarrollo de software móvil.</li>
+      </ul>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">Mar 2023 — Sep 2024</div>
+      <div class="timeline-role">Analista de Sistemas Informáticos</div>
+      <div class="timeline-company">Sodexo · Sector Hidrocarburos, Colombia</div>
+      <ul class="timeline-list">
+        <li>Desarrollo y mantenimiento de soluciones en <strong>Power Apps</strong> para digitalización de procesos internos.</li>
+        <li>Automatización de tareas mediante <strong>Power Automate</strong>, mejorando la eficiencia operativa en sitios remotos.</li>
+        <li>Análisis de datos y generación de reportes en <strong>Power BI</strong> con KPIs clave para toma de decisiones.</li>
+        <li>Soporte TI y gestión de incidencias en infraestructura, hardware y software en entornos de hidrocarburos.</li>
+      </ul>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">Oct 2021 — Abr 2022</div>
+      <div class="timeline-role">Aprendiz — Desarrollador Power Platform</div>
+      <div class="timeline-company">Américas BPS · Colombia</div>
+      <ul class="timeline-list">
+        <li>Desarrollo de aplicaciones básicas en Power Apps para automatización de procesos internos.</li>
+        <li>Implementación de flujos automatizados con Power Automate.</li>
+        <li>Creación de reportes y dashboards en Power BI.</li>
+        <li>Manejo de bases de datos con SQL y soporte TI básico.</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-header">
+    <span class="section-num">04 /</span>
+    <h2 class="section-title">Proyectos destacados</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="projects-grid">
+
+    <div class="project-card">
+      <div class="project-top">
+        <span class="project-num">// PROYECTO 01</span>
+        <div class="project-arrow">↗</div>
+      </div>
+      <div class="project-body">
+        <div class="project-name">Digitalización de Procesos Sodexo</div>
+        <p class="project-desc">Suite de Power Apps para digitalizar los procesos internos de operación en campo. Eliminación de formatos en papel y trazabilidad en tiempo real de actividades en sitios remotos del sector de hidrocarburos.</p>
+        <div class="project-stack">
+          <span class="stack-tag power">Power Apps</span>
+          <span class="stack-tag power">Power Automate</span>
+          <span class="stack-tag power">SharePoint</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-top">
+        <span class="project-num">// PROYECTO 02</span>
+        <div class="project-arrow">↗</div>
+      </div>
+      <div class="project-body">
+        <div class="project-name">Dashboard KPIs Operativos</div>
+        <p class="project-desc">Panel de control en Power BI con indicadores clave de operación para gestión en sitios remotos. Integración con múltiples fuentes de datos y visualizaciones drill-down por área y periodo.</p>
+        <div class="project-stack">
+          <span class="stack-tag bi">Power BI</span>
+          <span class="stack-tag db">PostgreSQL</span>
+          <span class="stack-tag power">Dataverse</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-top">
+        <span class="project-num">// PROYECTO 03</span>
+        <div class="project-arrow">↗</div>
+      </div>
+      <div class="project-body">
+        <div class="project-name">App Android Transaccional — Glouphi</div>
+        <p class="project-desc">Aplicación Android orientada a procesos empresariales y transaccionales, desarrollada en Kotlin. Incluye integración con APIs REST, manejo de estados y arquitectura modular.</p>
+        <div class="project-stack">
+          <span class="stack-tag android">Kotlin</span>
+          <span class="stack-tag android">Java</span>
+          <span class="stack-tag db">REST API</span>
+          <span class="stack-tag android">Android SDK</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-top">
+        <span class="project-num">// PROYECTO 04</span>
+        <div class="project-arrow">↗</div>
+      </div>
+      <div class="project-body">
+        <div class="project-name">Automatización de Flujos BPS</div>
+        <p class="project-desc">Flujos automatizados con Power Automate para Américas BPS que redujeron tiempos de gestión manual. Notificaciones automáticas, aprobaciones y sincronización de datos entre sistemas.</p>
+        <div class="project-stack">
+          <span class="stack-tag power">Power Automate</span>
+          <span class="stack-tag power">Power Apps</span>
+          <span class="stack-tag bi">Power BI</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-top">
+        <span class="project-num">// PROYECTO 05</span>
+        <div class="project-arrow">↗</div>
+      </div>
+      <div class="project-body">
+        <div class="project-name">Modelo Predictivo con Python</div>
+        <p class="project-desc">Construcción de modelos predictivos alineados con objetivos de negocio usando herramientas de análisis de datos y aprendizaje automático en Python (Pandas, Scikit-learn, Matplotlib).</p>
+        <div class="project-stack">
+          <span class="stack-tag python">Python</span>
+          <span class="stack-tag python">Scikit-learn</span>
+          <span class="stack-tag python">Pandas</span>
+          <span class="stack-tag bi">Visualización</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-top">
+        <span class="project-num">// PROYECTO 06</span>
+        <div class="project-arrow">↗</div>
+      </div>
+      <div class="project-body">
+        <div class="project-name">App de Trazabilidad Logística (Grado)</div>
+        <p class="project-desc">Proyecto de grado en Ingeniería de Software: aplicación para trazabilidad logística con integración de escáner QR, geolocalización y reportes en tiempo real para optimización de cadenas de suministro.</p>
+        <div class="project-stack">
+          <span class="stack-tag android">Kotlin</span>
+          <span class="stack-tag db">SQL</span>
+          <span class="stack-tag android">Maps API</span>
+          <span class="stack-tag db">REST API</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="section-header">
+    <span class="section-num">05 /</span>
+    <h2 class="section-title">Educación</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="edu-grid">
+    <div class="edu-card">
+      <div class="edu-year">Graduado 2025</div>
+      <div class="edu-degree">Ingeniería de Software</div>
+      <div class="edu-inst">Universidad Iberoamericana</div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-year">Graduado 2022</div>
+      <div class="edu-degree">Tecnólogo en Análisis y Desarrollo de Sistemas de Información</div>
+      <div class="edu-inst">SENA</div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-year">Graduado 2019</div>
+      <div class="edu-degree">Técnico en Sistemas</div>
+      <div class="edu-inst">SENA</div>
+    </div>
+  </div>
+</section>
+
+<!-- CERTS -->
+<section id="certs" class="certs-section">
+  <div class="section-header">
+    <span class="section-num">06 /</span>
+    <h2 class="section-title">Certificaciones</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="certs-grid">
+    <div class="cert-card">
+      <div class="cert-badge">🐍</div>
+      <div>
+        <div class="cert-name">Diplomado en Análisis de Datos con Python</div>
+        <div class="cert-issuer">Universidad Iberoamericana</div>
+      </div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-badge">📊</div>
+      <div>
+        <div class="cert-name">Power BI — Análisis de Datos y Business Intelligence</div>
+        <div class="cert-issuer">Udemy</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact-section">
+  <div class="contact-inner">
+    <div class="section-header" style="justify-content:center; margin-bottom:1rem;">
+      <span class="section-num">07 /</span>
+      <h2 class="section-title">Hablemos</h2>
+    </div>
+    <p class="contact-sub">
+      ¿Tienes un proyecto con Power Platform, necesitas una app Android o quieres automatizar procesos en tu empresa? Estoy disponible y con ganas de colaborar.
+    </p>
+    <div class="contact-links">
+      <a href="mailto:brayan.virguez12@gmail.com" class="c-link">
+        <span>✉️</span> brayan.virguez12@gmail.com
+      </a>
+      <a href="tel:+573168849932" class="c-link">
+        <span>📱</span> +57 316 884 9932
+      </a>
+      <a href="https://www.linkedin.com/in/brayan-virguez-6316331b3/" class="c-link" target="_blank">
+        <span>💼</span> LinkedIn
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span>© 2025 Brayan Estiven Virguez Cancelado</span>
+  <span>Power Platform · Kotlin · Android · Python</span>
+</footer>
+
+<script>
+  // Skill bars
+  const fills = document.querySelectorAll('.skill-bar-fill');
+  const skillObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const w = e.target.getAttribute('data-width');
+        setTimeout(() => { e.target.style.width = w + '%'; }, 250);
+        skillObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  fills.forEach(f => skillObs.observe(f));
+
+  // Timeline
+  const items = document.querySelectorAll('.timeline-item');
+  const tlObs = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 130);
+        tlObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.2 });
+  items.forEach(i => tlObs.observe(i));
+
+  // Active nav
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let cur = '';
+    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 130) cur = s.id; });
+    navLinks.forEach(l => { l.style.color = l.getAttribute('href') === `#${cur}` ? 'var(--text)' : ''; });
+  });
+</script>
+</body>
+</html>
